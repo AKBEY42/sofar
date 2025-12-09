@@ -1,13 +1,14 @@
-from flask import Flask, jsonify
+import telebot
+from config import TOKEN
 
-app = Flask(__name__)
+bot = telebot.TeleBot(TOKEN)
 
-@app.route("/")
-def home():
-    return jsonify({
-        "status": "OK",
-        "message": "SÖFAR Lojistik Yönetim Sistemi Çalışıyor"
-    })
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    bot.reply_to(message, "Merhaba! ŞOFAR Lojistik Bot çalışıyor.")
 
-if __name__ == "__main__":
-    app.run()
+@bot.message_handler(func=lambda message: True)
+def echo_message(message):
+    bot.reply_to(message, f"Aldım: {message.text}")
+
+bot.infinity_polling()
